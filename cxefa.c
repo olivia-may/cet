@@ -1,4 +1,5 @@
 // reads an esperanto-fied c file, printfs it out as a normal c file
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -58,6 +59,11 @@ void replace_word(char * input_word, char * output_word)
 
 int main(int argc, char ** argv)
 {
+	if (argc < 2)
+	{
+		return 1;
+	}
+	
 	input_stream = copy_file_to_memory(argv[1]);
 	output_stream = (char *)malloc(2 * sizeof(output_stream));
 	
