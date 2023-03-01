@@ -86,7 +86,6 @@ int main(int argc, char ** argv)
 	}
 	output_stream[i + output_offset] = '\0';
 
-	printf(input_stream);
 	printf(output_stream);
 	
 	free(input_stream);
