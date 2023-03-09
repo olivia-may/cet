@@ -5,12 +5,7 @@
 #include <stdbool.h>
 #include <string.h>
 
-#include "replacement_words.h"
-
-static char * input_stream = NULL;
-static char * output_stream = NULL;
-static int i = 0;
-static int output_offset = 0;
+#include "words.h"
 
 char * copy_file_to_memory(char * dir)
 {
@@ -34,61 +29,93 @@ char * copy_file_to_memory(char * dir)
 	return file_contents;
 }
 
-void replace_word(char * input_word, char * output_word)
-{
-	int input_word_len = strlen(input_word);
-	int output_word_len = strlen(output_word);
-	bool is_matching_word_found = true;
-	
-	for (int j = 0; j < input_word_len; j++)
-	{
-		if (!(input_stream[i - j] == input_word[input_word_len - 1 - j]))
-		{
-			is_matching_word_found = false;
-			break;
-		}
-	}
-
-	if (is_matching_word_found == true)
-	{
-		output_offset = output_offset + output_word_len - input_word_len;
-		output_stream = (char *)realloc(output_stream, (i + output_offset + 2) * sizeof(output_stream));
-		for (int j = 0; j < output_word_len; j++)
-		{
-			output_stream[i + output_offset - j] = output_word[output_word_len - 1  - j];
-		}
-	}
-}
-
 int main(int argc, char ** argv)
 {
+	/* command line */
 	if (argc < 2)
 	{
 		printf("error: no input\n");
+		
 		return 1;
 	}
 	
-	input_stream = copy_file_to_memory(argv[1]);
-	// 2 because null char at the end, and starting char
-	output_stream = (char *)malloc(2 * sizeof(output_stream));
-	
-	while (input_stream[i] != '\0')
+	char * input = copy_file_to_memory(argv[1]);
+	// go through each word at `i`
+	int i = 0;
+	while (true)
 	{
-		output_stream[i + output_offset] = input_stream[i];
+		if (i == WORDS_LIST_LEN) { break; }
 		
-		for (int k = 0; k < REPLACEMENT_WORDS_LIST_LEN; k++)
+		// go through each character at `j`
+		int j = 0;
+		while (true)
 		{
-			replace_word(REPLACEMENT_WORDS_LIST[k].esp, REPLACEMENT_WORDS_LIST[k].eng);
-		}
-		
-		i++;
-		output_stream = (char *)realloc(output_stream, (i + output_offset + 2) * sizeof(output_stream));
-	}
-	output_stream[i + output_offset] = '\0';
+			if (input[j] == '\0') { break; }
+			
+			// check if word matches
+			bool word_match_flag = false;
+			int k = 0;
+			while (true)
+			{
+				if (k == WORDS_LIST[i].eol) { word_match_flag = true; break; }
 
-	printf(output_stream);
-	
-	free(input_stream);
-	free(output_stream);
+				if (input[j + k] == '\0') { break; }
+				if (WORDS_LIST[i].eo[k] != input[j + k]) { break; }
+
+				k++;
+			}
+
+			if (word_match_flag == true)
+			{
+				int diff = WORDS_LIST[i].enl - WORDS_LIST[i].eol;
+				/* when the words aren't the same length */
+				if (diff != 0)
+				{
+					//FIXME `input_len`
+					int input_len;
+					if (diff > 0)
+					{
+						input = (char *)realloc(input, input_len + diff * sizeof(input));
+					}
+					int k = 0;
+					while (true)
+					{
+						input[j + k] =
+						input[j + WORDS_LIST[i].enl + k];
+						
+						if (input[j + WORDS_LIST[i].enl + diff + k] == '\0') 
+						{
+							input_len = j + WORDS_LIST[i].enl + diff + k;
+							break;
+						}
+						
+						k++;
+					}
+					if (diff < 0)
+					{
+						input = (char *)realloc(input, input_len + diff * sizeof(input));
+					}
+				}
+				
+				int k = 0;
+				while (true)
+				{
+					if (k == WORDS_LIST[i].enl) { break; }
+					
+					input[j + k] = WORDS_LIST[i].en[k];
+					
+					k++;
+				}
+			}
+
+			j++;
+		}
+
+		i++;
+	}
+
+	printf("%s", input);
+
+	free(input);
 	return 0;
 }
