@@ -7,23 +7,32 @@
 
 #include "words.h"
 
-char * copy_file_to_memory(char * dir)
+typedef struct
+{
+	char * str;
+	int len;
+}
+input_type;
+
+input_type copy_file_to_memory(char * dir)
 {
 	FILE * file = fopen(dir, "r");
-	char * file_contents = NULL;
+	input_type file_contents;
+	file_contents.str = NULL;
 	// 2 because null char
-	file_contents = (char *)malloc(2 * sizeof(file_contents));
+	file_contents.str = (char *)malloc(2 * sizeof(file_contents.str));
 	int i = 0;
 	int ch;
 	while (true)
 	{
 		ch = fgetc(file);
 		if (ch < 0) { break; }
-		file_contents[i] = ch;
+		file_contents.str[i] = ch;
 		i++;
-		file_contents = (char *)realloc(file_contents, (i + 2) * sizeof(file_contents));
+		file_contents.str = (char *)realloc(file_contents.str, (i + 2) * sizeof(file_contents.str));
 	}
-	file_contents[i] = '\0';
+	file_contents.str[i] = '\0';
+	file_contents.len = i;
 	fclose(file);
 
 	return file_contents;
@@ -39,7 +48,8 @@ int main(int argc, char ** argv)
 		return 1;
 	}
 	
-	char * input = copy_file_to_memory(argv[1]);
+	input_type input = copy_file_to_memory(argv[1]);
+	printf("%d\n", input.len);
 	// go through each word at `i`
 	int i = 0;
 	while (true)
@@ -50,7 +60,7 @@ int main(int argc, char ** argv)
 		int j = 0;
 		while (true)
 		{
-			if (input[j] == '\0') { break; }
+			if (input.str[j] == '\0') { break; }
 			
 			// check if word matches
 			bool word_match_flag = false;
@@ -59,8 +69,8 @@ int main(int argc, char ** argv)
 			{
 				if (k == WORDS_LIST[i].eol) { word_match_flag = true; break; }
 
-				if (input[j + k] == '\0') { break; }
-				if (WORDS_LIST[i].eo[k] != input[j + k]) { break; }
+				if (input.str[j + k] == '\0') { break; }
+				if (WORDS_LIST[i].eo[k] != input.str[j + k]) { break; }
 
 				k++;
 			}
@@ -69,31 +79,32 @@ int main(int argc, char ** argv)
 			{
 				int diff = WORDS_LIST[i].enl - WORDS_LIST[i].eol;
 				/* when the words aren't the same length */
+				printf("%d\n", diff);
 				if (diff != 0)
 				{
 					//FIXME `input_len`
-					int input_len;
+					input.len = input.len + diff;
 					if (diff > 0)
 					{
-						input = (char *)realloc(input, input_len + diff * sizeof(input));
+						input.len += diff + 1;
+						input.str = (char *)realloc(input.str, input.len * sizeof(input.str));
+						input.str[input.len] = '\0';
 					}
 					int k = 0;
 					while (true)
 					{
-						input[j + k] =
-						input[j + WORDS_LIST[i].enl + k];
+						if (input.str[j + WORDS_LIST[i].eol + k] == '\0') { break; }
 						
-						if (input[j + WORDS_LIST[i].enl + diff + k] == '\0') 
-						{
-							input_len = j + WORDS_LIST[i].enl + diff + k;
-							break;
-						}
+						printf("%d ", k);
+						input.str[j + WORDS_LIST[i].enl + k] =
+						input.str[j + WORDS_LIST[i].eol + k];
 						
 						k++;
 					}
 					if (diff < 0)
 					{
-						input = (char *)realloc(input, input_len + diff * sizeof(input));
+						input.str = (char *)realloc(input.str, input.len * sizeof(input.str));
+						input.str[input.len] = '\0';
 					}
 				}
 				
@@ -102,7 +113,7 @@ int main(int argc, char ** argv)
 				{
 					if (k == WORDS_LIST[i].enl) { break; }
 					
-					input[j + k] = WORDS_LIST[i].en[k];
+					input.str[j + k] = WORDS_LIST[i].en[k];
 					
 					k++;
 				}
@@ -114,8 +125,8 @@ int main(int argc, char ** argv)
 		i++;
 	}
 
-	printf("%s", input);
+	printf("%s", input.str);
 
-	free(input);
+	free(input.str);
 	return 0;
 }
