@@ -74,41 +74,59 @@ int main(int argc, char ** argv)
 			if (word_match_flag == true)
 			{
 				int diff = transl_word.len - native_word.len;
-				/* when the words aren't the same length */
-				printf("%d\n", diff);
-				if (diff != 0)
+				/* when the words aren't the same length */	
+				if (diff < 0)
 				{
-					//FIXME `input_len`
-					input.len = input.len + diff;
-					if (diff > 0)
-					{
-						input.len += diff + 1;
-						input.str = (char *)realloc(input.str, input.len * sizeof(input.str));
-						input.str[input.len] = '\0';
-					}
-					int k = 0;
+					int l = 0;
 					while (true)
 					{
-						if (input.str[j + native_word.len + k] == '\0') { break; }
+						if (l == -diff) break;
 						
-						printf("%d ", k);
-						input.str[j + transl_word.len + k] =
-						input.str[j + native_word.len + k];
+						k = 0;
+						while (true)
+						{
+							input.str[j + transl_word.len - 1 + k] = input.str[j + transl_word.len + k];
+
+							if (input.str[j + transl_word.len + k] == '\0') break;
+
+							k++;
+						}
 						
-						k++;
+						l++;
 					}
-					if (diff < 0)
+					
+					input.len += diff;
+					input.str = (char *)realloc(input.str, input.len * sizeof(input.str));
+				}
+				if (diff > 0)
+				{
+					input.len += diff;
+					input.str = (char *)realloc(input.str, input.len * sizeof(input.str));
+					
+					int l = 0;
+					while (true)
 					{
-						input.str = (char *)realloc(input.str, input.len * sizeof(input.str));
-						input.str[input.len] = '\0';
+						if (l == diff) break;
+						
+						k = 0;
+						while (true)
+						{
+							input.str[input.len - k] = input.str[input.len - k - 1];
+
+							if (input.len - k - 1 == j) break;
+
+							k++;
+						}
+						
+						l++;
 					}
 				}
 				
-				int k = 0;
+				k = 0;
 				while (true)
 				{
-					if (k == transl_word.len) { break; }
-					
+					if (k == transl_word.len) break;
+
 					input.str[j + k] = transl_word.str[k];
 					
 					k++;
