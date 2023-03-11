@@ -5,12 +5,17 @@
 // be exact or segmentation fault
 #define WORDS_LIST_LEN 6
 
+typedef struct
+{
+	char * str;
+	int len;
+}
+word;
+
 typedef struct 
 {
-	char * eo; // word
-	int eol; // word len
-	char * en;
-	int enl;
+	word eo;
+	word en;
 } 
 WORDS;
 

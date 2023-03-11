@@ -7,17 +7,10 @@
 
 #include "words.h"
 
-typedef struct
-{
-	char * str;
-	int len;
-}
-input_type;
-
-input_type copy_file_to_memory(char * dir)
+word copy_file_to_memory(char * dir)
 {
 	FILE * file = fopen(dir, "r");
-	input_type file_contents;
+	word file_contents;
 	file_contents.str = NULL;
 	// 2 because null char
 	file_contents.str = (char *)malloc(2 * sizeof(file_contents.str));
@@ -48,14 +41,17 @@ int main(int argc, char ** argv)
 		return 1;
 	}
 	
-	input_type input = copy_file_to_memory(argv[1]);
-	printf("%d\n", input.len);
+	word input = copy_file_to_memory(argv[1]);
+	word native_word, transl_word;
 	// go through each word at `i`
 	int i = 0;
 	while (true)
 	{
 		if (i == WORDS_LIST_LEN) { break; }
 		
+		native_word = WORDS_LIST[i].eo;
+		transl_word = WORDS_LIST[i].en;
+
 		// go through each character at `j`
 		int j = 0;
 		while (true)
@@ -67,17 +63,17 @@ int main(int argc, char ** argv)
 			int k = 0;
 			while (true)
 			{
-				if (k == WORDS_LIST[i].eol) { word_match_flag = true; break; }
+				if (k == native_word.len) { word_match_flag = true; break; }
 
 				if (input.str[j + k] == '\0') { break; }
-				if (WORDS_LIST[i].eo[k] != input.str[j + k]) { break; }
+				if (native_word.str[k] != input.str[j + k]) { break; }
 
 				k++;
 			}
 
 			if (word_match_flag == true)
 			{
-				int diff = WORDS_LIST[i].enl - WORDS_LIST[i].eol;
+				int diff = transl_word.len - native_word.len;
 				/* when the words aren't the same length */
 				printf("%d\n", diff);
 				if (diff != 0)
@@ -93,11 +89,11 @@ int main(int argc, char ** argv)
 					int k = 0;
 					while (true)
 					{
-						if (input.str[j + WORDS_LIST[i].eol + k] == '\0') { break; }
+						if (input.str[j + native_word.len + k] == '\0') { break; }
 						
 						printf("%d ", k);
-						input.str[j + WORDS_LIST[i].enl + k] =
-						input.str[j + WORDS_LIST[i].eol + k];
+						input.str[j + transl_word.len + k] =
+						input.str[j + native_word.len + k];
 						
 						k++;
 					}
@@ -111,9 +107,9 @@ int main(int argc, char ** argv)
 				int k = 0;
 				while (true)
 				{
-					if (k == WORDS_LIST[i].enl) { break; }
+					if (k == transl_word.len) { break; }
 					
-					input.str[j + k] = WORDS_LIST[i].en[k];
+					input.str[j + k] = transl_word.str[k];
 					
 					k++;
 				}
