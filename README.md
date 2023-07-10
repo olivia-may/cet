@@ -1,4 +1,4 @@
-# Esperanto-Programo-Tradukilaro (pt-aro)
+# Esperanto-Programo-Tradukilaro (ept)
 Esperanto program translate tool set. Translate a program written in Esperanto
 to a usable one in English! Languages currently planned are C and C++.
 This project is planned for GNU/Linux, BSD, Windows, and OS X.
@@ -15,15 +15,15 @@ Pull requests and making issues are welcome!
 ".cppeo" ".c++eo" ".cxxeo" ".cceo" C++ source file. <br>
 ".hppeo" ".h++eo" ".hxxeo" ".hheo" ".heo" C++ header file <br>
 
-## C-Programo-Tradukilo (cpt)
+## C-Esperanto-Programo-Tradukilo (cept)
 Translate C code written in Esperanto to compilable C code. <br>
 Usage: <br>
-`cpt programo.ceo` <br>
+`cept programo.ceo` <br>
 
-## C++-Programo-Tradukilo (cpt++)
+## C++-Esperanto-Programo-Tradukilo (cept++)
 Translate C++ code written in Esperanto to compilable C++ code. <br>
 Usage: <br>
-`cpt++ programo.cppeo` <br>
+`cept++ programo.cppeo` <br>
 
 ## Build from Source
 ### Dependencies
@@ -33,4 +33,4 @@ You will need Meson.
 `meson setup build` <br>
 `cd build` <br>
 `ninja` <br>
-`./src/cpt/cpt` <br>
+`./src/cept` <br>
