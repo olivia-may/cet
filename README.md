@@ -1,40 +1,36 @@
-### C-a Esperanta Tradukisto
-'cet' is the name of the translator,
-a command line program that takes a file as input, translates it, then prints it to the standard output.
-
-### '.ce' and 'ke' files
-Source '.ce' (C-o Esperanta) and header '.ke' (Kapo Esperanta) files.
-A sort of new programming language, using Esperanto words. Depends on 'cet'.
-
-### This Project
-The goal of this project is to enable the programmer to write their programs in an Esperanto-like version of C.
-I'm planning to add support for more languages, like C++, and Spanish.
-I'm looking for (positive or negative) feedback on this whole project so don't be afraid! My email is olmay@tuta.io.
+# Esperanto-Programo-Tradukilaro (pt-aro)
+Esperanto program translate tool set. Translate a program written in Esperanto
+to a usable one in English! Languages currently planned are C and C++.
+This project is planned for GNU/Linux, BSD, Windows, and OS X.
+The goal of this project is to enable the programmer to write their programs
+in Esperanto, and have those programs be more than text files. I'm looking
+for (positive or negative) feedback on this whole project so don't be afraid!
+My email is olivia.may@tuta.io. <br>
 Pull requests and making issues are welcome!
 
-### Install
-Git clone this repository:
-`git clone https://github.com/olivia-livs/cet`
+## File Names
+".ceo" C source file <br>
+".heo" C header file <br>
 
-Change to the project's directory
-`cd cet`
+".cppeo" ".c++eo" ".cxxeo" ".cceo" C++ source file. <br>
+".hppeo" ".h++eo" ".hxxeo" ".hheo" ".heo" C++ header file <br>
 
-With root access type:
-`make install`
+## C-Programo-Tradukilo (cpt)
+Translate C code written in Esperanto to compilable C code. <br>
+Usage: <br>
+`cpt programo.ceo` <br>
 
-Might work for other platforms, will work on GNU/Linux.
+## C++-Programo-Tradukilo (cpt++)
+Translate C++ code written in Esperanto to compilable C++ code. <br>
+Usage: <br>
+`cpt++ programo.cppeo` <br>
 
-### Fun Stuff
-First:
-`git clone https://github.com/olivia-livs/cet`
+## Build from Source
+### Dependencies
+You will need Meson.
 
-#### To translate and run a hello world program:
-`make saluton_mondo`
-
-#### To show that the translator won't crash horribly:
-`make`
-Then:
-`./cet testo.txt`
-
-#### Compile and run program:
-`make run`
+### Compile
+`meson setup build` <br>
+`cd build` <br>
+`ninja` <br>
+`./src/cpt/cpt` <br>
