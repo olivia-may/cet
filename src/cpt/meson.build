@@ -1,0 +1,4 @@
+executable(
+    'cpt',
+    'cpt.c'
+)

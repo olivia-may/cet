@@ -1,14 +1,8 @@
-project('cet', 'c', version : '0.1.1')
+project('pt-aro', 'c', version : '0.1.1')
 
-sources = [
-    'main.c'
-]
-depends = [
-    dependency('threads')
-]
-
-executable(
-    'cet',
-    sources,
-    dependencies: depends
+add_project_dependencies(
+    dependency('threads'),
+    language: 'c'
 )
+
+subdir('src')
