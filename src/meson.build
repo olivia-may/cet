@@ -1,9 +1,9 @@
 executable(
-    'cpt',
-    'cpt.c'
+    'cept',
+    'cept.c'
 )
 
 executable(
-    'cpt++',
-    'cpt++.c'
+    'cept++',
+    'cept++.c'
 )
