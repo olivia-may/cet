@@ -1,4 +1,0 @@
-executable(
-    'cpt',
-    'cpt.c'
-)
