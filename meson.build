@@ -1,4 +1,4 @@
-project('pt-aro', 'c', version : '0.1.1')
+project('ept', 'c', version : '0.1.1')
 
 add_project_dependencies(
     dependency('threads'),
